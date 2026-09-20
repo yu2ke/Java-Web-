@@ -22,7 +22,7 @@ Java Web 课程设计。企业食堂在线点餐、食谱与菜单管理、订�
 
 ## 运行
 
-1. 建库并导入表结构（见下方「数据库」）
+1. 导入数据库：`mysql -uroot -p < sql/restaurant_order.sql`
 2. 复制 `src/main/resources/db.properties.example` 为 `db.properties`，改成自己的数据库账号密码
 3. `mvn clean package`
 4. 把 `target/canteen.war` 部署到 Tomcat 10.1，访问 `http://localhost:8080/canteen`
@@ -31,8 +31,13 @@ Java Web 课程设计。企业食堂在线点餐、食谱与菜单管理、订�
 
 ## 数据库
 
-库名 `restaurant_order`，用到的表 / 视图：`user`、`role`、`department`、`menu`、
-`menu_item`、`recipe`、`orders`、`sys_config`、`v_blanket_order`、
-`v_monthly_sales`、`v_employee_monthly_orders`。
+[sql/restaurant_order.sql](sql/restaurant_order.sql) 是完整的库导出（含示例数据），
+导入后即建好库 `restaurant_order`：
 
-建表 SQL 未包含在本仓库中。执行 `db.properties.example` 中的连接串前，请自行建库建表。
+- 表：`user`、`role`、`department`、`menu`、`menu_item`、`recipe`、`orders`、
+  `order_item`、`sys_config`
+- 视图：`v_blanket_order`、`v_monthly_sales`、`v_employee_monthly`、
+  `v_employee_monthly_orders`、`v_emp_own_monthly`、`v_emp_own_orders`、
+  `v_menu_current`、`v_recipe_mgr`、`v_user_mgr`
+
+示例账号存在 `user` 表，密码是 SHA2-256 散列值，登录时直接比对散列。
