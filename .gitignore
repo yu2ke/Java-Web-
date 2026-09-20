@@ -1,0 +1,6 @@
+/target/
+/.idea/
+/.smarttomcat/
+*.war
+*.class
+/src/main/resources/db.properties

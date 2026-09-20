@@ -1,0 +1,95 @@
+<%@ page contentType="text/html;charset=UTF-8" %>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <title>菜单管理</title>
+  <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
+</head>
+<body>
+<jsp:include page="/WEB-INF/views/common/header.jsp"/>
+<main class="wrap">
+  <h1>菜单管理</h1>
+  <p class="sub">从食谱挑选菜品组成菜单；可改名价、删菜、切换当前菜单，历史菜单留存可复用。</p>
+
+  <form class="inline" method="post" action="${pageContext.request.contextPath}/menu/create">
+    <input type="text" name="menuName" placeholder="新菜单名字" required>
+    <button class="btn" type="submit">新建菜单</button>
+  </form>
+
+  <h3>当前菜单：菜单 #${menuId}</h3>
+  <table class="tbl">
+    <thead>
+    <tr><th>编号</th><th>图片</th><th>菜名</th><th>分类</th><th>单位</th><th>价格</th><th>操作</th></tr>
+    </thead>
+    <tbody>
+    <c:forEach var="it" items="${items}">
+      <tr>
+        <td>${it.itemId}</td>
+        <td>
+          <c:if test="${not empty it.photo}">
+            <img class="dish" src="${pageContext.request.contextPath}/img/${it.photo}" alt="">
+          </c:if>
+        </td>
+        <td>${it.dishName}</td>
+        <td>${it.classify}</td>
+        <td>${it.unit}</td>
+        <td>
+          <form class="inline" method="post" action="${pageContext.request.contextPath}/menu/itemPrice">
+            <input type="hidden" name="itemId" value="${it.itemId}">
+            <input type="number" name="price" step="0.01" min="0" value="<fmt:formatNumber value='${it.price}' pattern='0.00'/>">
+            <button class="btn-ghost small" type="submit">改价</button>
+          </form>
+        </td>
+        <td>
+          <form class="inline" method="post" action="${pageContext.request.contextPath}/menu/itemDelete">
+            <input type="hidden" name="itemId" value="${it.itemId}">
+            <button class="btn-ghost small" type="submit" onclick="return confirm('确定从菜单删除该菜品吗？')">删除</button>
+          </form>
+        </td>
+      </tr>
+    </c:forEach>
+    <c:if test="${empty items}">
+      <tr><td colspan="7" class="muted">该菜单还没有菜品</td></tr>
+    </c:if>
+    </tbody>
+  </table>
+
+  <h3>从食谱加入菜品</h3>
+  <form class="inline" method="post" action="${pageContext.request.contextPath}/menu/addItem">
+    <input type="hidden" name="menuId" value="${menuId}">
+    <select name="recipeId">
+      <c:forEach var="r" items="${recipes}">
+        <option value="${r.recipeId}">${r.name}（${r.classify} · ${r.unit} · ￥<fmt:formatNumber value="${r.price}" pattern="0.00"/>）</option>
+      </c:forEach>
+    </select>
+    <button class="btn" type="submit">加入菜单</button>
+  </form>
+
+  <h3>全部菜单（可切换当前菜单）</h3>
+  <table class="tbl">
+    <thead><tr><th>编号</th><th>菜单名</th><th>状态</th><th>查看</th><th>操作</th></tr></thead>
+    <tbody>
+    <c:forEach var="m" items="${menus}">
+      <tr>
+        <td>${m.menuId}</td>
+        <td>${m.menuName}</td>
+        <td><c:if test="${m.current}">当前</c:if></td>
+        <td><a class="link" href="${pageContext.request.contextPath}/menu?menuId=${m.menuId}">查看</a></td>
+        <td>
+          <c:if test="${not m.current}">
+            <form class="inline" method="post" action="${pageContext.request.contextPath}/menu/activate">
+              <input type="hidden" name="menuId" value="${m.menuId}">
+              <button class="btn-ghost small" type="submit">设为当前</button>
+            </form>
+          </c:if>
+        </td>
+      </tr>
+    </c:forEach>
+    </tbody>
+  </table>
+</main>
+</body>
+</html>
