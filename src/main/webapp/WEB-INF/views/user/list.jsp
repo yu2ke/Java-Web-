@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
 <!DOCTYPE html>
 <html lang="zh">
 <head>
@@ -13,7 +14,7 @@
   <h1>用户管理</h1>
   <p class="sub">用户不需要注册，由有权限的用户添加，支持批量导入。</p>
 
-  <c:if test="${not empty param.msg}"><p class="msg">${param.msg}</p></c:if>
+  <c:if test="${not empty param.msg}"><p class="msg">${fn:escapeXml(param.msg)}</p></c:if>
 
   <div class="grid2">
     <div class="card">
@@ -26,7 +27,7 @@
         <label>部门
           <select name="deptId">
             <c:forEach var="d" items="${departments}">
-              <option value="${d.id}">${d.name}</option>
+              <option value="${d.id}">${fn:escapeXml(d.name)}</option>
             </c:forEach>
           </select>
         </label>
@@ -34,7 +35,7 @@
         <label>角色
           <select name="roleId">
             <c:forEach var="r" items="${roles}">
-              <option value="${r.id}">${r.name}</option>
+              <option value="${r.id}">${fn:escapeXml(r.name)}</option>
             </c:forEach>
           </select>
         </label>
@@ -60,13 +61,13 @@
     <c:forEach var="u" items="${users}">
       <tr>
         <td>${u.userId}</td>
-        <td>${u.username}</td>
-        <td>${u.realName}</td>
-        <td>${u.phone}</td>
-        <td>${u.deptName}</td>
-        <td>${u.workstation}</td>
-        <td>${u.roleName}</td>
-        <td>${u.active ? '在职' : '停用'}</td>
+        <td>${fn:escapeXml(u.username)}</td>
+        <td>${fn:escapeXml(u.realName)}</td>
+        <td>${fn:escapeXml(u.phone)}</td>
+        <td>${fn:escapeXml(u.deptName)}</td>
+        <td>${fn:escapeXml(u.workstation)}</td>
+        <td>${fn:escapeXml(u.roleName)}</td>
+        <td><span class="badge ${u.active ? 'ok' : 'pending'}">${u.active ? '在职' : '停用'}</span></td>
       </tr>
     </c:forEach>
     </tbody>

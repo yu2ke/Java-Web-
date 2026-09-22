@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
 <!DOCTYPE html>
 <html lang="zh">
 <head>
@@ -18,13 +19,13 @@
     <input type="hidden" name="recipeId" value="${recipe.recipeId}">
 
     <label>菜名
-      <input type="text" name="name" value="${recipe.name}" required>
+      <input type="text" name="name" value="${fn:escapeXml(recipe.name)}" required>
     </label>
     <label>分类（主食/菜肴/汤/甜点…）
-      <input type="text" name="classify" value="${recipe.classify}" required>
+      <input type="text" name="classify" value="${fn:escapeXml(recipe.classify)}" required>
     </label>
     <label>计量单位（份/两/个/例/杯/碗）
-      <input type="text" name="unit" value="${recipe.unit}" required>
+      <input type="text" name="unit" value="${fn:escapeXml(recipe.unit)}" required>
     </label>
     <label>单价（元）
       <input type="number" name="price" step="0.01" min="0" value="${recipe.price}" required>
@@ -33,7 +34,7 @@
       <input type="file" name="photo" accept="image/*">
     </label>
     <c:if test="${not empty recipe.photo}">
-      <p>当前图片：<img class="dish" src="${pageContext.request.contextPath}/img/${recipe.photo}" alt=""></p>
+      <p>当前图片：<img class="dish" src="${pageContext.request.contextPath}/img/${fn:escapeXml(recipe.photo)}" alt=""></p>
     </c:if>
 
     <div class="actions">

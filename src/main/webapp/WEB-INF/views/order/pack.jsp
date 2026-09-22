@@ -1,6 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
+<%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
 <!DOCTYPE html>
 <html lang="zh">
 <head>
@@ -22,14 +23,14 @@
 
   <c:forEach var="o" items="${orders}">
     <div class="card">
-      <h3>${o.realName}　电话：${o.phone}　工位：${o.workstation}</h3>
+      <h3>${fn:escapeXml(o.realName)}　电话：${fn:escapeXml(o.phone)}　工位：${fn:escapeXml(o.workstation)}</h3>
       <table class="tbl">
         <thead><tr><th>菜名</th><th>单位</th><th>分量</th><th>单价</th><th>合计</th></tr></thead>
         <tbody>
         <c:forEach var="it" items="${o.items}">
           <tr>
-            <td>${it.dishName}</td>
-            <td>${it.unit}</td>
+            <td>${fn:escapeXml(it.dishName)}</td>
+            <td>${fn:escapeXml(it.unit)}</td>
             <td><fmt:formatNumber value="${it.quantity}" pattern="0.##"/></td>
             <td>￥<fmt:formatNumber value="${it.price}" pattern="0.00"/></td>
             <td>￥<fmt:formatNumber value="${it.amount}" pattern="0.00"/></td>

@@ -108,4 +108,10 @@ public class RecipeServlet extends HttpServlet {
     static double parseDouble(String s, double def) {
         try { return Double.parseDouble(s.trim()); } catch (Exception e) { return def; }
     }
+
+    /** 统计月份参数(yyyy-MM)；非法值退回当前月，避免拼进页面和下载文件名 */
+    static String parseYm(String ym) {
+        if (ym != null && ym.matches("\\d{4}-\\d{2}")) return ym;
+        return java.time.LocalDate.now().toString().substring(0, 7);
+    }
 }

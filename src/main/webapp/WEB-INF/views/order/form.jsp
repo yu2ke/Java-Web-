@@ -1,6 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
+<%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
 <!DOCTYPE html>
 <html lang="zh">
 <head>
@@ -12,11 +13,11 @@
 <jsp:include page="/WEB-INF/views/common/header.jsp"/>
 <main class="wrap">
   <h1>订餐</h1>
-  <p class="sub">当前菜单菜单 #${menuId}。订餐截止时间 ${deadline}，配餐开始时间 ${serveStart}。
+  <p class="sub">当前菜单菜单 #${menuId}。订餐截止时间 ${fn:escapeXml(deadline)}，配餐开始时间 ${fn:escapeXml(serveStart)}。
      规则：当天须在截止时间前下单，次日须在配餐开始时间后下单，每人每天只能下一张订单。</p>
 
   <c:if test="${not empty param.msg}">
-    <p class="msg">${param.msg}</p>
+    <p class="msg">${fn:escapeXml(param.msg)}</p>
   </c:if>
 
   <form method="post" action="${pageContext.request.contextPath}/order/submit">
@@ -28,9 +29,9 @@
       <tbody>
       <c:forEach var="it" items="${items}">
         <tr>
-          <td>${it.dishName}</td>
-          <td>${it.classify}</td>
-          <td>${it.unit}</td>
+          <td>${fn:escapeXml(it.dishName)}</td>
+          <td>${fn:escapeXml(it.classify)}</td>
+          <td>${fn:escapeXml(it.unit)}</td>
           <td>￥<fmt:formatNumber value="${it.price}" pattern="0.00"/></td>
           <td><input type="number" name="qty_${it.itemId}" value="0" min="0" step="1" style="width:80px"></td>
         </tr>
@@ -54,11 +55,11 @@
         <td>${o.orderTime}</td>
         <td>
           <c:forEach var="it" items="${o.items}">
-            ${it.dishName} ${it.quantity}${it.unit}（￥<fmt:formatNumber value="${it.amount}" pattern="0.00"/>）<br>
+            ${fn:escapeXml(it.dishName)} <fmt:formatNumber value="${it.quantity}" pattern="0.##"/>${fn:escapeXml(it.unit)}（￥<fmt:formatNumber value="${it.amount}" pattern="0.00"/>）<br>
           </c:forEach>
         </td>
         <td>￥<fmt:formatNumber value="${o.totalPrice}" pattern="0.00"/></td>
-        <td>${o.status}</td>
+        <td><span class="badge ${o.status eq '已配餐' ? 'ok' : 'pending'}">${fn:escapeXml(o.status)}</span></td>
       </tr>
     </c:forEach>
     <c:if test="${empty myOrders}">

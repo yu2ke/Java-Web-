@@ -68,6 +68,10 @@ public class OrderServlet extends HttpServlet {
             String err = orderDao.create(user.getUserId(), date, lines);
             redirect(resp, req, "/order", err == null ? "下单成功" : err);
         } else if ("/delete".equals(path)) {
+            if (!user.isManager()) {
+                resp.sendError(HttpServletResponse.SC_FORBIDDEN);
+                return;
+            }
             int id = RecipeServlet.parseInt(req.getParameter("orderId"), 0);
             orderDao.delete(id);
             String date = req.getParameter("date");

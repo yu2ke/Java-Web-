@@ -1,6 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
+<%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
 <!DOCTYPE html>
 <html lang="zh">
 <head>
@@ -15,7 +16,7 @@
   <p class="sub">在售菜品列表，可查找、新增、修改、删除（逻辑删除，不影响历史订单）。</p>
 
   <form class="inline" method="get" action="${pageContext.request.contextPath}/recipe/list">
-    <input type="text" name="keyword" value="${keyword}" placeholder="按菜名查找">
+    <input type="text" name="keyword" value="${fn:escapeXml(keyword)}" placeholder="按菜名查找">
     <button class="btn" type="submit">查找</button>
     <a class="btn-ghost" href="${pageContext.request.contextPath}/recipe/add">新增菜品</a>
   </form>
@@ -33,14 +34,14 @@
           <td>
             <c:choose>
               <c:when test="${not empty r.photo}">
-                <img class="dish" src="${pageContext.request.contextPath}/img/${r.photo}" alt="">
+                <img class="dish" src="${pageContext.request.contextPath}/img/${fn:escapeXml(r.photo)}" alt="">
               </c:when>
               <c:otherwise><span class="muted">无</span></c:otherwise>
             </c:choose>
           </td>
-          <td>${r.name}</td>
-          <td>${r.classify}</td>
-          <td>${r.unit}</td>
+          <td>${fn:escapeXml(r.name)}</td>
+          <td>${fn:escapeXml(r.classify)}</td>
+          <td>${fn:escapeXml(r.unit)}</td>
           <td>￥<fmt:formatNumber value="${r.price}" pattern="0.00"/></td>
           <td>
             <a class="link" href="${pageContext.request.contextPath}/recipe/edit?id=${r.recipeId}">修改</a>

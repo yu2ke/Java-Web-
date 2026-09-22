@@ -1,6 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
+<%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
 <!DOCTYPE html>
 <html lang="zh">
 <head>
@@ -25,9 +26,9 @@
     <tbody>
     <c:forEach var="r" items="${rows}">
       <tr>
-        <td>${r.classify}</td>
-        <td>${r.dishName}</td>
-        <td>${r.unit}</td>
+        <td>${fn:escapeXml(r.classify)}</td>
+        <td>${fn:escapeXml(r.dishName)}</td>
+        <td>${fn:escapeXml(r.unit)}</td>
         <td><fmt:formatNumber value="${r.totalQty}" pattern="0.##"/></td>
       </tr>
     </c:forEach>

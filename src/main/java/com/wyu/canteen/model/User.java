@@ -1,7 +1,28 @@
 package com.wyu.canteen.model;
 
+import java.util.Map;
+
 /** 系统用户(员工) */
 public class User {
+
+    /**
+     * 各功能路径允许访问的角色 ID。
+     * 前缀更长者优先(如 /order/list 先于 /order)；未列入的路径对所有已登录用户开放。
+     * 菜单显示和 LoginFilter 的权限校验共用这张表。
+     */
+    private static final Map<String, int[]> ACCESS = Map.ofEntries(
+            Map.entry("/recipe", new int[]{1, 2}),
+            Map.entry("/menu", new int[]{1, 2}),
+            Map.entry("/order/list", new int[]{1, 2, 3}),
+            Map.entry("/order", new int[]{1, 2, 3, 4, 5}),
+            Map.entry("/blanket", new int[]{1, 2}),
+            Map.entry("/pack", new int[]{1, 2, 3}),
+            Map.entry("/stats", new int[]{1, 4, 5}),
+            Map.entry("/stats/all", new int[]{1, 4}),   // 虚拟路径：全公司统计内容，仅经理与财务可见
+            Map.entry("/export", new int[]{1, 4, 5}),
+            Map.entry("/user", new int[]{1}),
+            Map.entry("/config", new int[]{1}));
+
     private int userId;
     private String username;
     private String realName;
@@ -33,4 +54,20 @@ public class User {
 
     /** 餐厅经理(角色1) 视为管理员 */
     public boolean isManager() { return roleId == 1; }
+
+    /** 当前用户能否访问该路径 */
+    public boolean canAccess(String path) {
+        String matched = null;
+        for (String key : ACCESS.keySet()) {
+            if ((path.equals(key) || path.startsWith(key + "/"))
+                    && (matched == null || key.length() > matched.length())) {
+                matched = key;
+            }
+        }
+        if (matched == null) return true;
+        for (int role : ACCESS.get(matched)) {
+            if (role == roleId) return true;
+        }
+        return false;
+    }
 }

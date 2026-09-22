@@ -11,7 +11,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -24,9 +23,13 @@ public class ExportServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String type = req.getParameter("type");
-        String ym = req.getParameter("ym");
-        if (ym == null || ym.isEmpty()) ym = LocalDate.now().toString().substring(0, 7);
+        String ym = RecipeServlet.parseYm(req.getParameter("ym"));
         User user = (User) req.getSession().getAttribute("loginUser");
+        // 全公司报表只给经理和财务；企业员工只能导出自己的
+        if (!"mine".equals(type) && !user.canAccess("/stats/all")) {
+            resp.sendError(HttpServletResponse.SC_FORBIDDEN);
+            return;
+        }
 
         StringBuilder sb = new StringBuilder();
         String fileName;

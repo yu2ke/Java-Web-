@@ -1,5 +1,7 @@
 package com.wyu.canteen.filter;
 
+import com.wyu.canteen.model.User;
+
 import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -25,6 +27,8 @@ public class LoginFilter implements Filter {
         HttpServletRequest r = (HttpServletRequest) req;
         HttpServletResponse p = (HttpServletResponse) resp;
         String uri = r.getRequestURI().substring(r.getContextPath().length());
+        // 供 header.jsp 高亮当前菜单：包含页里的 requestURI 指向被包含的资源，取不到原始地址
+        r.setAttribute("currentPath", uri);
 
         boolean white = uri.isEmpty() || uri.equals("/") || uri.equals("/favicon.ico");
         for (String w : WHITE) {
@@ -35,8 +39,14 @@ public class LoginFilter implements Filter {
             return;
         }
         HttpSession session = r.getSession(false);
-        if (session == null || session.getAttribute("loginUser") == null) {
+        User user = session == null ? null : (User) session.getAttribute("loginUser");
+        if (user == null) {
             p.sendRedirect(r.getContextPath() + "/login");
+            return;
+        }
+        // 角色权限：不在 User.ACCESS 表内的路径对所有已登录用户开放
+        if (!user.canAccess(uri)) {
+            p.sendError(HttpServletResponse.SC_FORBIDDEN);
             return;
         }
         chain.doFilter(req, resp);

@@ -1,6 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
+<%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
 <!DOCTYPE html>
 <html lang="zh">
 <head>
@@ -19,6 +20,10 @@
     <button class="btn" type="submit">查询</button>
   </form>
 
+  <c:if test="${not companyWide}">
+    <p class="muted">全公司报表仅餐厅经理与财务管理可见，这里只显示你本人的消费统计。</p>
+  </c:if>
+  <c:if test="${companyWide}">
   <h3>月度销售统计总报表
     <a class="btn-ghost small" href="${pageContext.request.contextPath}/export?type=monthly&ym=${ym}">导出 CSV</a>
   </h3>
@@ -27,8 +32,8 @@
     <tbody>
     <c:forEach var="r" items="${monthly}">
       <tr>
-        <td>${r.dishName}</td>
-        <td>${r.unit}</td>
+        <td>${fn:escapeXml(r.dishName)}</td>
+        <td>${fn:escapeXml(r.unit)}</td>
         <td><fmt:formatNumber value="${r.qty}" pattern="0.##"/></td>
         <td>￥<fmt:formatNumber value="${r.unitPrice}" pattern="0.00"/></td>
         <td>￥<fmt:formatNumber value="${r.amount}" pattern="0.00"/></td>
@@ -49,9 +54,9 @@
     <tbody>
     <c:forEach var="r" items="${employeeMonthly}">
       <tr>
-        <td>${r.realName}</td>
-        <td>${r.dishName}</td>
-        <td>${r.unit}</td>
+        <td>${fn:escapeXml(r.realName)}</td>
+        <td>${fn:escapeXml(r.dishName)}</td>
+        <td>${fn:escapeXml(r.unit)}</td>
         <td><fmt:formatNumber value="${r.qty}" pattern="0.##"/></td>
         <td>￥<fmt:formatNumber value="${r.unitPrice}" pattern="0.00"/></td>
         <td>￥<fmt:formatNumber value="${r.amount}" pattern="0.00"/></td>
@@ -69,14 +74,14 @@
     <tbody>
     <c:forEach var="r" items="${employeeOrders}">
       <tr>
-        <td>${r.realName}</td>
+        <td>${fn:escapeXml(r.realName)}</td>
         <td>${r.orderId}</td>
         <td>${r.orderDate}</td>
-        <td>${r.dishName}</td>
+        <td>${fn:escapeXml(r.dishName)}</td>
         <td><fmt:formatNumber value="${r.quantity}" pattern="0.##"/></td>
         <td>￥<fmt:formatNumber value="${r.price}" pattern="0.00"/></td>
         <td>￥<fmt:formatNumber value="${r.amount}" pattern="0.00"/></td>
-        <td>${r.status}</td>
+        <td><span class="badge ${r.status eq '已配餐' ? 'ok' : 'pending'}">${fn:escapeXml(r.status)}</span></td>
       </tr>
     </c:forEach>
     <c:if test="${empty employeeOrders}">
@@ -84,6 +89,7 @@
     </c:if>
     </tbody>
   </table>
+  </c:if>
 
   <h3>我的月度消费统计
     <a class="btn-ghost small" href="${pageContext.request.contextPath}/export?type=mine&ym=${ym}">导出 CSV</a>
@@ -93,9 +99,9 @@
     <tbody>
     <c:forEach var="r" items="${mine}">
       <tr>
-        <td>${r.realName}</td>
-        <td>${r.dishName}</td>
-        <td>${r.unit}</td>
+        <td>${fn:escapeXml(r.realName)}</td>
+        <td>${fn:escapeXml(r.dishName)}</td>
+        <td>${fn:escapeXml(r.unit)}</td>
         <td><fmt:formatNumber value="${r.qty}" pattern="0.##"/></td>
         <td>￥<fmt:formatNumber value="${r.unitPrice}" pattern="0.00"/></td>
         <td>￥<fmt:formatNumber value="${r.amount}" pattern="0.00"/></td>

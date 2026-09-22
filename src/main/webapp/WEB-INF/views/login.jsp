@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
 <!DOCTYPE html>
 <html lang="zh">
 <head>
@@ -15,12 +16,12 @@
     <p class="sub">登录后在截止时间前选择今天的午餐。</p>
 
     <c:if test="${not empty error}">
-      <p class="err">${error}</p>
+      <p class="err">${fn:escapeXml(error)}</p>
     </c:if>
 
     <form method="post" action="${pageContext.request.contextPath}/login">
       <label>登录名
-        <input name="username" value="${remembered}" autocomplete="username" required>
+        <input name="username" value="${fn:escapeXml(remembered)}" autocomplete="username" required>
       </label>
       <label>密码
         <input name="password" type="password" autocomplete="current-password" required>

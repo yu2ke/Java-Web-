@@ -1,6 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
+<%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
 <!DOCTYPE html>
 <html lang="zh">
 <head>
@@ -30,12 +31,12 @@
         <td>${it.itemId}</td>
         <td>
           <c:if test="${not empty it.photo}">
-            <img class="dish" src="${pageContext.request.contextPath}/img/${it.photo}" alt="">
+            <img class="dish" src="${pageContext.request.contextPath}/img/${fn:escapeXml(it.photo)}" alt="">
           </c:if>
         </td>
-        <td>${it.dishName}</td>
-        <td>${it.classify}</td>
-        <td>${it.unit}</td>
+        <td>${fn:escapeXml(it.dishName)}</td>
+        <td>${fn:escapeXml(it.classify)}</td>
+        <td>${fn:escapeXml(it.unit)}</td>
         <td>
           <form class="inline" method="post" action="${pageContext.request.contextPath}/menu/itemPrice">
             <input type="hidden" name="itemId" value="${it.itemId}">
@@ -62,7 +63,7 @@
     <input type="hidden" name="menuId" value="${menuId}">
     <select name="recipeId">
       <c:forEach var="r" items="${recipes}">
-        <option value="${r.recipeId}">${r.name}（${r.classify} · ${r.unit} · ￥<fmt:formatNumber value="${r.price}" pattern="0.00"/>）</option>
+        <option value="${r.recipeId}">${fn:escapeXml(r.name)}（${fn:escapeXml(r.classify)} · ${fn:escapeXml(r.unit)} · ￥<fmt:formatNumber value="${r.price}" pattern="0.00"/>）</option>
       </c:forEach>
     </select>
     <button class="btn" type="submit">加入菜单</button>
@@ -75,8 +76,8 @@
     <c:forEach var="m" items="${menus}">
       <tr>
         <td>${m.menuId}</td>
-        <td>${m.menuName}</td>
-        <td><c:if test="${m.current}">当前</c:if></td>
+        <td>${fn:escapeXml(m.menuName)}</td>
+        <td><c:if test="${m.current}"><span class="badge ok">当前</span></c:if></td>
         <td><a class="link" href="${pageContext.request.contextPath}/menu?menuId=${m.menuId}">查看</a></td>
         <td>
           <c:if test="${not m.current}">

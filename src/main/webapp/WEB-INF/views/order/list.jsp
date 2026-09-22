@@ -1,6 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
+<%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
 <!DOCTYPE html>
 <html lang="zh">
 <head>
@@ -25,16 +26,16 @@
     <c:forEach var="o" items="${orders}">
       <tr>
         <td>${o.orderId}</td>
-        <td>${o.realName}</td>
-        <td>${o.phone}</td>
-        <td>${o.workstation}</td>
+        <td>${fn:escapeXml(o.realName)}</td>
+        <td>${fn:escapeXml(o.phone)}</td>
+        <td>${fn:escapeXml(o.workstation)}</td>
         <td>
           <c:forEach var="it" items="${o.items}">
-            ${it.dishName} ${it.quantity}${it.unit}<br>
+            ${fn:escapeXml(it.dishName)} <fmt:formatNumber value="${it.quantity}" pattern="0.##"/>${fn:escapeXml(it.unit)}<br>
           </c:forEach>
         </td>
         <td>￥<fmt:formatNumber value="${o.totalPrice}" pattern="0.00"/></td>
-        <td>${o.status}</td>
+        <td><span class="badge ${o.status eq '已配餐' ? 'ok' : 'pending'}">${fn:escapeXml(o.status)}</span></td>
         <td>
           <form class="inline" method="post" action="${pageContext.request.contextPath}/order/delete">
             <input type="hidden" name="orderId" value="${o.orderId}">
