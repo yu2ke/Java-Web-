@@ -13,7 +13,7 @@
 <jsp:include page="/WEB-INF/views/common/header.jsp"/>
 <main class="wrap">
   <h1>订餐</h1>
-  <p class="sub">当前菜单菜单 #${menuId}。订餐截止时间 ${fn:escapeXml(deadline)}，配餐开始时间 ${fn:escapeXml(serveStart)}。
+  <p class="sub">当前菜单：${empty menuName ? '（还没有菜单，请联系管理员）' : fn:escapeXml(menuName)}。订餐截止时间 ${fn:escapeXml(deadline)}，配餐开始时间 ${fn:escapeXml(serveStart)}。
      规则：当天须在截止时间前下单，次日须在配餐开始时间后下单，每人每天只能下一张订单。</p>
 
   <c:if test="${not empty param.msg}">

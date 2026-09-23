@@ -45,15 +45,27 @@ public class RecipeDao {
     }
 
     public int insert(Recipe r) {
+        // 同名同单位的菜如果之前只是被逻辑删除过，直接把它恢复，避免"删了以后再加不回来"
+        String restore = "UPDATE recipe SET classify = ?, photo = COALESCE(?, photo), price = ?, is_active = 1 "
+                       + "WHERE name = ? AND unit = ? AND is_active = 0";
         String sql = "INSERT INTO recipe(name, classify, photo, unit, price) VALUES(?,?,?,?,?)";
-        try (Connection conn = DBUtil.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, r.getName());
-            ps.setString(2, r.getClassify());
-            ps.setString(3, r.getPhoto());
-            ps.setString(4, r.getUnit());
-            ps.setDouble(5, r.getPrice());
-            return ps.executeUpdate();
+        try (Connection conn = DBUtil.getConnection()) {
+            try (PreparedStatement ps = conn.prepareStatement(restore)) {
+                ps.setString(1, r.getClassify());
+                ps.setString(2, r.getPhoto());
+                ps.setDouble(3, r.getPrice());
+                ps.setString(4, r.getName());
+                ps.setString(5, r.getUnit());
+                if (ps.executeUpdate() > 0) return 1;
+            }
+            try (PreparedStatement ps = conn.prepareStatement(sql)) {
+                ps.setString(1, r.getName());
+                ps.setString(2, r.getClassify());
+                ps.setString(3, r.getPhoto());
+                ps.setString(4, r.getUnit());
+                ps.setDouble(5, r.getPrice());
+                return ps.executeUpdate();
+            }
         } catch (Exception e) {
             e.printStackTrace();
             return 0;

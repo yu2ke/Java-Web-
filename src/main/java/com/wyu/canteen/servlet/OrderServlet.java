@@ -42,6 +42,7 @@ public class OrderServlet extends HttpServlet {
         User user = (User) req.getSession().getAttribute("loginUser");
         int menuId = menuDao.currentMenuId();
         req.setAttribute("menuId", menuId);
+        req.setAttribute("menuName", menuDao.currentMenuName());
         req.setAttribute("items", menuDao.items(menuId));
         req.setAttribute("myOrders", orderDao.listByUser(user.getUserId()));
         req.setAttribute("today", LocalDate.now().toString());

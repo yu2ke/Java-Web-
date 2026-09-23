@@ -13,9 +13,14 @@
 <main class="wrap">
   <h1>${mode == 'add' ? '新增菜品' : '修改菜品'}</h1>
 
+  <c:if test="${not empty param.msg}">
+    <p class="err">${fn:escapeXml(param.msg)}</p>
+  </c:if>
+
   <form class="form-card" method="post"
         action="${pageContext.request.contextPath}/recipe/save"
-        enctype="multipart/form-data">
+        enctype="multipart/form-data"
+        onsubmit="return checkPhotoSize(this)">
     <input type="hidden" name="recipeId" value="${recipe.recipeId}">
 
     <label>菜名
@@ -30,7 +35,7 @@
     <label>单价（元）
       <input type="number" name="price" step="0.01" min="0" value="${recipe.price}" required>
     </label>
-    <label>菜品图片
+    <label>菜品图片（不超过 20MB）
       <input type="file" name="photo" accept="image/*">
     </label>
     <c:if test="${not empty recipe.photo}">
@@ -43,5 +48,16 @@
     </div>
   </form>
 </main>
+<script>
+  // 超过服务端上限时给出明确提示，否则 Tomcat 会直接掐断连接，看着像"保存没反应"
+  function checkPhotoSize(form) {
+    var file = form.photo.files[0];
+    if (file && file.size > 20 * 1024 * 1024) {
+      alert("图片不能超过 20MB（当前约 " + Math.round(file.size / 1048576) + "MB），请先压缩再上传");
+      return false;
+    }
+    return true;
+  }
+</script>
 </body>
 </html>

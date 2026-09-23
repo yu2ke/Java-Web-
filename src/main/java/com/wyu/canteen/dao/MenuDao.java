@@ -45,6 +45,19 @@ public class MenuDao {
         return 0;
     }
 
+    /** 当前菜单的名字；没有菜单时返回空串 */
+    public String currentMenuName() {
+        String sql = "SELECT menu_name FROM menu WHERE is_current = 1 LIMIT 1";
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) return rs.getString(1);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
+
     public List<MenuItem> items(int menuId) {
         List<MenuItem> list = new ArrayList<>();
         String sql = "SELECT item_id, menu_id, dish_name, classify, photo, unit, price "
@@ -79,6 +92,55 @@ public class MenuDao {
             ps.setString(1, name);
             ps.setInt(2, createBy);
             return ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
+    /** 菜单改名 */
+    public int renameMenu(int menuId, String name) {
+        String sql = "UPDATE menu SET menu_name = ? WHERE menu_id = ?";
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, name);
+            ps.setInt(2, menuId);
+            return ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
+    /**
+     * 删除菜单：菜单项由外键 CASCADE 一起删掉；历史订单存的是菜品快照，不受影响。
+     * 删的正好是当前菜单时，把剩下的最后一个菜单设为当前，避免系统没有可用菜单。
+     */
+    public int deleteMenu(int menuId) {
+        String queryCurrent = "SELECT is_current FROM menu WHERE menu_id = ?";
+        String delete = "DELETE FROM menu WHERE menu_id = ?";
+        try (Connection conn = DBUtil.getConnection()) {
+            boolean wasCurrent = false;
+            try (PreparedStatement ps = conn.prepareStatement(queryCurrent)) {
+                ps.setInt(1, menuId);
+                try (ResultSet rs = ps.executeQuery()) {
+                    wasCurrent = rs.next() && rs.getInt(1) == 1;
+                }
+            }
+            try (PreparedStatement ps = conn.prepareStatement(delete)) {
+                ps.setInt(1, menuId);
+                if (ps.executeUpdate() == 0) return 0;
+            }
+            if (wasCurrent) {
+                try (PreparedStatement ps = conn.prepareStatement("UPDATE menu SET is_current = 0")) {
+                    ps.executeUpdate();
+                }
+                try (PreparedStatement ps = conn.prepareStatement(
+                        "UPDATE menu SET is_current = 1 ORDER BY menu_id DESC LIMIT 1")) {
+                    ps.executeUpdate();
+                }
+            }
+            return 1;
         } catch (Exception e) {
             e.printStackTrace();
             return 0;

@@ -217,10 +217,35 @@ input:focus,select:focus,textarea:focus{
 .tbl tbody tr:hover td{background:#fafbfc}
 .tbl td{font-variant-numeric:tabular-nums}
 .tbl .dish{display:block}
-.tbl form.inline{margin:0}
+.tbl .inline{margin:0}
 .tbl input[type=number]{width:110px}
+.tbl input[type=text]{width:190px;padding:6px 10px;font-size:13px}
 
 .dish{width:56px;height:42px;object-fit:cover;border-radius:6px;border:1px solid var(--line)}
+
+/* ---------- 双击图片放大 ---------- */
+
+.dish{cursor:zoom-in}
+.lightbox{
+  position:fixed;
+  inset:0;
+  z-index:99;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:4vh 4vw;
+  background:rgba(10,20,30,.78);
+  cursor:zoom-out;
+}
+/* 用 hidden 属性控制显隐：即使这份样式没更新，遮罩也不会被当成普通块元素挤进页面 */
+.lightbox[hidden]{display:none}
+.lightbox img{
+  max-width:92vw;
+  max-height:92vh;
+  border-radius:var(--radius);
+  background:#fff;
+  box-shadow:0 20px 60px rgba(0,0,0,.45);
+}
 
 .badge{display:inline-block;padding:2px 9px;border-radius:999px;font-size:12px;white-space:nowrap}
 .badge.ok{background:var(--ok-soft);color:var(--ok)}
@@ -291,7 +316,7 @@ input:focus,select:focus,textarea:focus{
 
 @media print{
   body{display:block;background:#fff;color:#000;font-size:12px}
-  .sidebar,.actions,.btn,.btn-ghost,.msg,.sub,.eyebrow,form.inline,.hint{display:none !important}
+  .sidebar,.actions,.btn,.btn-ghost,.msg,.sub,.eyebrow,form.inline,.hint,.lightbox{display:none !important}
   .wrap{max-width:none;margin:0;padding:0}
   h1{font-size:20px;margin:0 0 4px}
   h3{font-size:14px;margin:12px 0 6px}

@@ -24,13 +24,13 @@
   <form method="post" action="${pageContext.request.contextPath}/recipe/batchDelete">
     <table class="tbl">
       <thead>
-      <tr><th></th><th>编号</th><th>图片</th><th>菜名</th><th>分类</th><th>单位</th><th>单价</th><th>操作</th></tr>
+      <tr><th></th><th>序号</th><th>图片</th><th>菜名</th><th>分类</th><th>单位</th><th>单价</th><th>操作</th></tr>
       </thead>
       <tbody>
-      <c:forEach var="r" items="${recipes}">
+      <c:forEach var="r" items="${recipes}" varStatus="st">
         <tr>
           <td><input type="checkbox" name="ids" value="${r.recipeId}"></td>
-          <td>${r.recipeId}</td>
+          <td>${st.count}</td>
           <td>
             <c:choose>
               <c:when test="${not empty r.photo}">

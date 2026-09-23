@@ -13,11 +13,13 @@ import jakarta.servlet.http.Part;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
 /** 食谱管理：查询 / 新增 / 修改 / 删除 / 批量删除 + 图片上传 */
 @WebServlet("/recipe/*")
-@MultipartConfig(maxFileSize = 5 * 1024 * 1024)
+@MultipartConfig(maxFileSize = 20 * 1024 * 1024, fileSizeThreshold = 1024 * 1024)
 public class RecipeServlet extends HttpServlet {
 
     private final RecipeDao dao = new RecipeDao();
@@ -34,6 +36,10 @@ public class RecipeServlet extends HttpServlet {
             req.setAttribute("recipe", dao.find(id));
             req.setAttribute("mode", "edit");
             req.getRequestDispatcher("/WEB-INF/views/recipe/form.jsp").forward(req, resp);
+        } else if ("/delete".equals(path)) {
+            // 列表页的「删除」是链接(GET)，这里必须接住，否则等于点了没反应
+            dao.delete(parseInt(req.getParameter("id"), 0));
+            resp.sendRedirect(req.getContextPath() + "/recipe/list");
         } else {
             String keyword = req.getParameter("keyword");
             req.setAttribute("recipes", dao.list(keyword));
@@ -64,13 +70,22 @@ public class RecipeServlet extends HttpServlet {
                 String saved = saveUpload(photo);
                 if (saved != null) r.setPhoto(saved);
             }
+            int rows;
             if (id > 0) {
                 r.setRecipeId(id);
-                dao.update(r);
+                rows = dao.update(r);
             } else {
-                dao.insert(r);
+                rows = dao.insert(r);
             }
-            resp.sendRedirect(req.getContextPath() + "/recipe/list");
+            if (rows > 0) {
+                resp.sendRedirect(req.getContextPath() + "/recipe/list");
+            } else {
+                // 唯一索引是 (菜名, 计量单位)，重复时数据库会拒绝，必须让用户看见原因
+                String back = id > 0 ? "/recipe/edit?id=" + id : "/recipe/add";
+                resp.sendRedirect(req.getContextPath() + back + "?msg=" + URLEncoder.encode(
+                        "保存失败：已经有「同名 + 同计量单位」的菜品，换个菜名或单位再试",
+                        StandardCharsets.UTF_8));
+            }
         } else if ("/delete".equals(path)) {
             dao.delete(parseInt(req.getParameter("id"), 0));
             resp.sendRedirect(req.getContextPath() + "/recipe/list");

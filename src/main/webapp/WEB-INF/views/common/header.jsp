@@ -40,3 +40,26 @@
     <a class="link" href="${ctx}/logout">退出</a>
   </div>
 </aside>
+
+<!-- 双击任意图片放大；点击遮罩或按 Esc 关闭 -->
+<div class="lightbox" id="lightbox" hidden role="dialog" aria-modal="true" aria-label="图片预览">
+  <img src="" alt="放大预览">
+</div>
+<script>
+  (function () {
+    var box = document.getElementById("lightbox");
+    var big = box.querySelector("img");
+    document.addEventListener("dblclick", function (e) {
+      var img = e.target.closest ? e.target.closest("img") : null;
+      if (!img || img === big) return;
+      big.src = img.src;
+      box.hidden = false;
+    });
+    box.addEventListener("click", function () {
+      box.hidden = true;
+    });
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape") box.hidden = true;
+    });
+  })();
+</script>
