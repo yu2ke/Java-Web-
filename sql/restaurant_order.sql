@@ -67,7 +67,7 @@ CREATE TABLE `menu` (
   UNIQUE KEY `uq_menu_current` (`current_key`),
   KEY `fk_menu_create_by` (`create_by`),
   CONSTRAINT `fk_menu_create_by` FOREIGN KEY (`create_by`) REFERENCES `user` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='菜单';
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='菜单';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -76,7 +76,7 @@ CREATE TABLE `menu` (
 
 LOCK TABLES `menu` WRITE;
 /*!40000 ALTER TABLE `menu` DISABLE KEYS */;
-INSERT INTO `menu` (`menu_id`, `menu_name`, `is_current`, `create_by`, `create_time`) VALUES (1,'本周标准菜单',1,1,'2026-09-10 21:26:54'),(2,'上周菜单',0,1,'2026-09-10 21:26:54');
+INSERT INTO `menu` (`menu_id`, `menu_name`, `is_current`, `create_by`, `create_time`) VALUES (1,'555',1,1,'2026-09-10 21:26:54'),(10,'周一菜单',0,1,'2026-09-23 22:04:40');
 /*!40000 ALTER TABLE `menu` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -102,7 +102,7 @@ CREATE TABLE `menu_item` (
   CONSTRAINT `fk_mi_menu` FOREIGN KEY (`menu_id`) REFERENCES `menu` (`menu_id`) ON DELETE CASCADE,
   CONSTRAINT `fk_mi_recipe` FOREIGN KEY (`recipe_id`) REFERENCES `recipe` (`recipe_id`) ON DELETE SET NULL,
   CONSTRAINT `menu_item_chk_1` CHECK ((`price` >= 0))
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='菜单菜品(快照)';
+) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='菜单菜品(快照)';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -111,7 +111,7 @@ CREATE TABLE `menu_item` (
 
 LOCK TABLES `menu_item` WRITE;
 /*!40000 ALTER TABLE `menu_item` DISABLE KEYS */;
-INSERT INTO `menu_item` VALUES (1,1,1,'炒白菜','菜肴',NULL,'份',3.00),(2,1,2,'西红柿蛋汤','汤',NULL,'份',3.00),(3,1,3,'小炒肉','菜肴',NULL,'份',5.00),(4,1,4,'米饭','主食',NULL,'两',0.30),(5,1,6,'银耳汤','甜点',NULL,'碗',4.00),(6,1,5,'馒头','主食',NULL,'个',1.00),(7,1,7,'西红柿炒鸡蛋','菜肴',NULL,'份',6.00),(8,1,8,'莲藕汤','汤',NULL,'份',4.00),(9,2,3,'小炒肉','菜肴',NULL,'份',5.50),(10,2,4,'米饭','主食',NULL,'两',0.30);
+INSERT INTO `menu_item` VALUES (1,1,1,'炒白菜','菜肴',NULL,'份',3.00),(2,1,2,'西红柿蛋汤','汤',NULL,'份',3.00),(3,1,3,'小炒肉','菜肴',NULL,'份',5.00),(4,1,4,'米饭','主食',NULL,'两',0.30),(5,1,6,'银耳汤','甜点',NULL,'碗',4.00),(6,1,5,'馒头','主食',NULL,'个',1.00),(7,1,7,'西红柿炒鸡蛋','菜肴',NULL,'份',6.00),(8,1,8,'莲藕汤','汤',NULL,'份',4.00),(16,1,7,'西红柿炒鸡蛋','菜肴',NULL,'份',6.00),(17,1,1,'炒白菜','菜肴',NULL,'份',3.00),(18,1,6,'银耳汤','甜点',NULL,'碗',4.00),(19,1,41,'牛仔骨','菜肴','0257372fea6a48e8876f7338078fa1cf.png','份',8.00),(20,10,1,'炒白菜','菜肴',NULL,'份',3.00),(21,10,2,'西红柿蛋汤','汤',NULL,'份',3.00),(22,10,3,'小炒肉','菜肴',NULL,'份',5.00),(23,10,41,'牛仔骨','菜肴','0257372fea6a48e8876f7338078fa1cf.png','份',8.00);
 /*!40000 ALTER TABLE `menu_item` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -137,7 +137,7 @@ CREATE TABLE `order_item` (
   CONSTRAINT `fk_oi_order` FOREIGN KEY (`order_id`) REFERENCES `orders` (`order_id`) ON DELETE CASCADE,
   CONSTRAINT `chk_oi_amount` CHECK ((`amount` = (`quantity` * `price`))),
   CONSTRAINT `order_item_chk_1` CHECK ((`quantity` > 0))
-) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='订单明细';
+) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='订单明细';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -146,7 +146,7 @@ CREATE TABLE `order_item` (
 
 LOCK TABLES `order_item` WRITE;
 /*!40000 ALTER TABLE `order_item` DISABLE KEYS */;
-INSERT INTO `order_item` VALUES (1,1,'米饭','两','主食',2.00,0.30,0.60),(2,1,'小炒肉','份','菜肴',1.00,5.00,5.00),(3,2,'米饭','两','主食',3.00,0.30,0.90),(4,2,'馒头','个','主食',2.00,1.00,2.00),(5,3,'米饭','两','主食',4.00,0.30,1.20),(6,3,'小炒肉','份','菜肴',1.00,5.00,5.00),(7,3,'西红柿蛋汤','份','汤',1.00,3.00,3.00),(8,4,'米饭','两','主食',2.00,0.30,0.60),(9,4,'银耳汤','碗','甜点',1.00,4.00,4.00),(10,5,'小炒肉','份','菜肴',1.00,5.00,5.00),(11,5,'米饭','两','主食',2.00,0.30,0.60),(12,6,'米饭','两','主食',2.00,0.30,0.60),(13,6,'西红柿炒鸡蛋','份','菜肴',1.00,6.00,6.00),(14,6,'莲藕汤','份','汤',1.00,4.00,4.00),(15,7,'炒白菜','份','菜肴',1.00,3.00,3.00),(16,7,'米饭','两','主食',2.00,0.30,0.60),(17,8,'小炒肉','份','菜肴',1.00,5.00,5.00),(18,8,'米饭','两','主食',2.00,0.30,0.60),(19,9,'馒头','个','主食',2.00,1.00,2.00),(20,9,'银耳汤','碗','甜点',1.00,4.00,4.00);
+INSERT INTO `order_item` VALUES (1,1,'米饭','两','主食',2.00,0.30,0.60),(2,1,'小炒肉','份','菜肴',1.00,5.00,5.00),(3,2,'米饭','两','主食',3.00,0.30,0.90),(4,2,'馒头','个','主食',2.00,1.00,2.00),(5,3,'米饭','两','主食',4.00,0.30,1.20),(6,3,'小炒肉','份','菜肴',1.00,5.00,5.00),(7,3,'西红柿蛋汤','份','汤',1.00,3.00,3.00),(8,4,'米饭','两','主食',2.00,0.30,0.60),(9,4,'银耳汤','碗','甜点',1.00,4.00,4.00),(10,5,'小炒肉','份','菜肴',1.00,5.00,5.00),(11,5,'米饭','两','主食',2.00,0.30,0.60),(12,6,'米饭','两','主食',2.00,0.30,0.60),(13,6,'西红柿炒鸡蛋','份','菜肴',1.00,6.00,6.00),(14,6,'莲藕汤','份','汤',1.00,4.00,4.00),(15,7,'炒白菜','份','菜肴',1.00,3.00,3.00),(16,7,'米饭','两','主食',2.00,0.30,0.60),(17,8,'小炒肉','份','菜肴',1.00,5.00,5.00),(18,8,'米饭','两','主食',2.00,0.30,0.60),(19,9,'馒头','个','主食',2.00,1.00,2.00),(20,9,'银耳汤','碗','甜点',1.00,4.00,4.00),(23,11,'西红柿蛋汤','份','汤',1.00,3.00,3.00),(24,11,'小炒肉','份','菜肴',1.00,5.00,5.00),(25,11,'米饭','两','主食',1.00,0.30,0.30);
 /*!40000 ALTER TABLE `order_item` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
@@ -265,7 +265,7 @@ CREATE TABLE `orders` (
   KEY `idx_order_date` (`order_date`),
   KEY `idx_order_user` (`user_id`),
   CONSTRAINT `fk_order_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='订单';
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='订单';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -274,7 +274,7 @@ CREATE TABLE `orders` (
 
 LOCK TABLES `orders` WRITE;
 /*!40000 ALTER TABLE `orders` DISABLE KEYS */;
-INSERT INTO `orders` VALUES (1,5,'2026-08-03','2026-08-03 07:50:00',5.60,'已配餐'),(2,5,'2026-08-05','2026-08-05 08:10:00',2.90,'已配餐'),(3,5,'2026-09-01','2026-09-01 08:20:00',9.20,'已配餐'),(4,5,'2026-09-02','2026-09-02 08:30:00',4.60,'已配餐'),(5,6,'2026-08-03','2026-08-03 08:05:00',5.60,'已配餐'),(6,6,'2026-09-01','2026-09-01 08:40:00',10.60,'已配餐'),(7,6,'2026-09-03','2026-09-03 08:05:00',3.60,'已下单'),(8,7,'2026-09-01','2026-09-01 08:15:00',5.60,'已下单'),(9,7,'2026-09-02','2026-09-02 08:45:00',6.00,'已下单');
+INSERT INTO `orders` VALUES (1,5,'2026-08-03','2026-08-03 07:50:00',5.60,'已配餐'),(2,5,'2026-08-05','2026-08-05 08:10:00',2.90,'已配餐'),(3,5,'2026-09-01','2026-09-01 08:20:00',9.20,'已配餐'),(4,5,'2026-09-02','2026-09-02 08:30:00',4.60,'已配餐'),(5,6,'2026-08-03','2026-08-03 08:05:00',5.60,'已配餐'),(6,6,'2026-09-01','2026-09-01 08:40:00',10.60,'已配餐'),(7,6,'2026-09-03','2026-09-03 08:05:00',3.60,'已下单'),(8,7,'2026-09-01','2026-09-01 08:15:00',5.60,'已下单'),(9,7,'2026-09-02','2026-09-02 08:45:00',6.00,'已下单'),(11,1,'2026-09-23','2026-09-23 20:43:06',8.30,'已下单');
 /*!40000 ALTER TABLE `orders` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
@@ -329,7 +329,7 @@ CREATE TABLE `recipe` (
   UNIQUE KEY `uq_recipe_name_unit` (`name`,`unit`),
   KEY `idx_recipe_classify` (`classify`),
   CONSTRAINT `recipe_chk_1` CHECK ((`price` >= 0))
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='食谱';
+) ENGINE=InnoDB AUTO_INCREMENT=42 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='食谱';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -338,7 +338,7 @@ CREATE TABLE `recipe` (
 
 LOCK TABLES `recipe` WRITE;
 /*!40000 ALTER TABLE `recipe` DISABLE KEYS */;
-INSERT INTO `recipe` VALUES (1,'炒白菜','菜肴',NULL,'份',3.00,1,'2026-09-10 21:26:54','2026-09-10 21:26:54'),(2,'西红柿蛋汤','汤',NULL,'份',3.00,1,'2026-09-10 21:26:54','2026-09-10 21:26:54'),(3,'小炒肉','菜肴',NULL,'份',5.00,1,'2026-09-10 21:26:54','2026-09-10 21:26:54'),(4,'米饭','主食',NULL,'两',0.30,1,'2026-09-10 21:26:54','2026-09-10 21:26:54'),(5,'馒头','主食',NULL,'个',1.00,1,'2026-09-10 21:26:54','2026-09-10 21:26:54'),(6,'银耳汤','甜点',NULL,'碗',4.00,1,'2026-09-10 21:26:54','2026-09-10 21:26:54'),(7,'西红柿炒鸡蛋','菜肴',NULL,'份',6.00,1,'2026-09-10 21:26:54','2026-09-10 21:26:54'),(8,'莲藕汤','汤',NULL,'份',4.00,1,'2026-09-10 21:26:54','2026-09-10 21:26:54'),(9,'111','主食','92706bed205d4c9f9a9d4d45cfddb009.png','份',3.00,1,'2026-09-10 21:41:20','2026-09-10 21:41:20');
+INSERT INTO `recipe` VALUES (1,'炒白菜','菜肴',NULL,'份',3.00,1,'2026-09-10 21:26:54','2026-09-10 21:26:54'),(2,'西红柿蛋汤','汤',NULL,'份',3.00,1,'2026-09-10 21:26:54','2026-09-10 21:26:54'),(3,'小炒肉','菜肴',NULL,'份',5.00,1,'2026-09-10 21:26:54','2026-09-10 21:26:54'),(4,'米饭','主食',NULL,'两',0.30,1,'2026-09-10 21:26:54','2026-09-10 21:26:54'),(5,'馒头','主食',NULL,'个',1.00,1,'2026-09-10 21:26:54','2026-09-10 21:26:54'),(6,'银耳汤','甜点',NULL,'碗',4.00,1,'2026-09-10 21:26:54','2026-09-10 21:26:54'),(7,'西红柿炒鸡蛋','菜肴',NULL,'份',6.50,1,'2026-09-10 21:26:54','2026-09-23 21:55:16'),(8,'莲藕汤','汤',NULL,'份',4.00,0,'2026-09-10 21:26:54','2026-09-23 21:39:38'),(9,'111','主食','60abd074c7dd4d769ead52fbc88aef0d.png','份',3.00,0,'2026-09-10 21:41:20','2026-09-23 20:57:35'),(12,'麻辣手撕鸡','菜肴','4052a3d577bd4de8bd1649fc3acaf208.png','份',5.00,1,'2026-09-23 20:08:53','2026-09-23 21:58:28'),(41,'牛仔骨','菜肴','0257372fea6a48e8876f7338078fa1cf.png','份',8.00,1,'2026-09-23 22:04:07','2026-09-23 22:04:07');
 /*!40000 ALTER TABLE `recipe` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -388,7 +388,7 @@ CREATE TABLE `sys_config` (
 
 LOCK TABLES `sys_config` WRITE;
 /*!40000 ALTER TABLE `sys_config` DISABLE KEYS */;
-INSERT INTO `sys_config` VALUES ('order_deadline','09:00'),('serve_start','11:30');
+INSERT INTO `sys_config` VALUES ('order_deadline','22:00'),('serve_start','11:30');
 /*!40000 ALTER TABLE `sys_config` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -600,6 +600,106 @@ SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = @saved_cs_client;
 
 --
+-- Dumping events for database 'restaurant_order'
+--
+
+--
+-- Dumping routines for database 'restaurant_order'
+--
+/*!50003 DROP FUNCTION IF EXISTS `fn_emp_uid` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` FUNCTION `fn_emp_uid`() RETURNS int unsigned
+    NO SQL
+    DETERMINISTIC
+RETURN @emp_uid ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `sp_activate_menu` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_activate_menu`(IN p_menu_id INT UNSIGNED)
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM menu WHERE menu_id = p_menu_id) THEN
+    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '菜单不存在';
+  END IF;
+  UPDATE menu SET is_current = 0;
+  UPDATE menu SET is_current = 1 WHERE menu_id = p_menu_id;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `sp_add_item` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_add_item`(IN p_order_id INT UNSIGNED, IN p_menu_item_id INT UNSIGNED, IN p_quantity DECIMAL(8,2))
+BEGIN
+  INSERT INTO order_item(order_id, dish_name, unit, classify, quantity, price, amount)
+  SELECT p_order_id, dish_name, unit, classify, p_quantity, price, 0
+  FROM menu_item WHERE item_id = p_menu_item_id;
+  IF ROW_COUNT() = 0 THEN
+    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '菜单中不存在该菜品，下单失败';
+  END IF;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `sp_create_order` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_create_order`(IN p_user_id INT UNSIGNED, IN p_order_date DATE)
+BEGIN
+  DECLARE v_cnt INT;
+  SELECT COUNT(*) INTO v_cnt FROM orders WHERE user_id=p_user_id AND order_date=p_order_date;
+  IF v_cnt > 0 THEN
+    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '该员工当天只能下一张订单';
+  END IF;
+  INSERT INTO orders(user_id, order_date, order_time) VALUES (p_user_id, p_order_date, NOW());
+  SET @new_order_id = LAST_INSERT_ID();
+  SELECT @new_order_id AS order_id;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+
+--
 -- Current Database: `restaurant_order`
 --
 
@@ -776,4 +876,4 @@ USE `restaurant_order`;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-09-20  8:35:56
+-- Dump completed on 2026-09-29 23:56:11
