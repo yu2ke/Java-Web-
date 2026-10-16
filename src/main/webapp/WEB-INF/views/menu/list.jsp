@@ -50,6 +50,7 @@
         <td>
           <form class="inline" method="post" action="${pageContext.request.contextPath}/menu/itemPrice">
             <input type="hidden" name="itemId" value="${it.itemId}">
+            <input type="hidden" name="menuId" value="${menuId}">
             <input type="number" name="price" step="0.01" min="0" value="<fmt:formatNumber value='${it.price}' pattern='0.00'/>">
             <button class="btn-ghost small" type="submit">改价</button>
           </form>
@@ -57,6 +58,7 @@
         <td>
           <form class="inline" method="post" action="${pageContext.request.contextPath}/menu/itemDelete">
             <input type="hidden" name="itemId" value="${it.itemId}">
+            <input type="hidden" name="menuId" value="${menuId}">
             <button class="btn-ghost small" type="submit" onclick="return confirm('确定从菜单删除该菜品吗？')">删除</button>
           </form>
         </td>

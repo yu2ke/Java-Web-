@@ -17,7 +17,9 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 /** 订餐：员工下单(存储过程)、订单查询、经理删除订单 */
 @WebServlet("/order/*")
@@ -40,10 +42,30 @@ public class OrderServlet extends HttpServlet {
             return;
         }
         User user = (User) req.getSession().getAttribute("loginUser");
+        if ("/mine".equals(path)) {
+            req.setAttribute("myOrders", orderDao.listByUser(user.getUserId()));
+            req.getRequestDispatcher("/WEB-INF/views/order/my.jsp").forward(req, resp);
+            return;
+        }
         int menuId = menuDao.currentMenuId();
         req.setAttribute("menuId", menuId);
         req.setAttribute("menuName", menuDao.currentMenuName());
-        req.setAttribute("items", menuDao.items(menuId));
+        List<MenuItem> items = menuDao.items(menuId);
+        req.setAttribute("items", items);
+        // 分类筛选条：按菜单里实际出现的分类去重(保持顺序)
+        Set<String> classifies = new LinkedHashSet<>();
+        for (MenuItem it : items) {
+            if (it.getClassify() != null && !it.getClassify().isEmpty()) classifies.add(it.getClassify());
+        }
+        req.setAttribute("classifies", classifies);
+        // 横幅轮播：拿当日菜单里前 3 张菜品图
+        List<String> bannerPhotos = new ArrayList<>();
+        for (MenuItem it : items) {
+            if (it.getPhoto() != null && !it.getPhoto().isEmpty() && bannerPhotos.size() < 3) {
+                bannerPhotos.add(it.getPhoto());
+            }
+        }
+        req.setAttribute("bannerPhotos", bannerPhotos);
         req.setAttribute("myOrders", orderDao.listByUser(user.getUserId()));
         req.setAttribute("today", LocalDate.now().toString());
         req.setAttribute("deadline", configDao.get("order_deadline"));
@@ -67,7 +89,8 @@ public class OrderServlet extends HttpServlet {
                 return;
             }
             String err = orderDao.create(user.getUserId(), date, lines);
-            redirect(resp, req, "/order", err == null ? "下单成功" : err);
+            // 成功后直接去"我的订单"，让用户看到刚下的单
+            redirect(resp, req, err == null ? "/order/mine" : "/order", err == null ? "下单成功" : err);
         } else if ("/delete".equals(path)) {
             if (!user.isManager()) {
                 resp.sendError(HttpServletResponse.SC_FORBIDDEN);

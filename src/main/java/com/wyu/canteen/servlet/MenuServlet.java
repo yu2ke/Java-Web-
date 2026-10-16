@@ -76,7 +76,12 @@ public class MenuServlet extends HttpServlet {
                 break;
             default:
         }
-        String suffix = msg == null ? "" : "?msg=" + URLEncoder.encode(msg, StandardCharsets.UTF_8);
-        resp.sendRedirect(req.getContextPath() + "/menu" + suffix);
+        // 带着 menuId 跳回去，别让用户改完一份菜单却被弹回"当前菜单"
+        String mid = req.getParameter("menuId");
+        String back = (mid == null || mid.isEmpty()) ? "" : "?menuId=" + RecipeServlet.parseInt(mid, 0);
+        String suffix = msg == null
+                ? ""
+                : (back.isEmpty() ? "?" : "&") + "msg=" + URLEncoder.encode(msg, StandardCharsets.UTF_8);
+        resp.sendRedirect(req.getContextPath() + "/menu" + back + suffix);
     }
 }

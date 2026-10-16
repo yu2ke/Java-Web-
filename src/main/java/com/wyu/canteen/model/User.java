@@ -55,6 +55,9 @@ public class User {
     /** 餐厅经理(角色1) 视为管理员 */
     public boolean isManager() { return roleId == 1; }
 
+    /** 企业员工(角色5)：功能少，界面用顶部导航 */
+    public boolean isEmployee() { return roleId == 5; }
+
     /** 当前用户能否访问该路径 */
     public boolean canAccess(String path) {
         String matched = null;
