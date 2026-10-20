@@ -31,6 +31,14 @@
       正在查看：${fn:escapeXml(viewName)}
     </c:if>
   </h3>
+
+  <form class="inline" method="post" action="${pageContext.request.contextPath}/menu/syncPhoto">
+    <input type="hidden" name="menuId" value="${menuId}">
+    <button class="btn-ghost small" type="submit"
+            onclick="return confirm('把这份菜单里各道菜的图片按食谱刷新一遍？（只改图片，不动价格和名称）')">同步食谱图片</button>
+    <span class="muted">在食谱里换了图片后，点这里把这份菜单的图同步过来</span>
+  </form>
+
   <table class="tbl">
     <thead>
     <tr><th>序号</th><th>图片</th><th>菜名</th><th>分类</th><th>单位</th><th>价格</th><th>操作</th></tr>

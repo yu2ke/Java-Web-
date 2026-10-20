@@ -60,6 +60,12 @@ public class MenuServlet extends HttpServlet {
                                                     : "删除失败，请刷新后重试";
                 break;
             }
+            case "/syncPhoto": {
+                int menuId = RecipeServlet.parseInt(req.getParameter("menuId"), 0);
+                int rows = menuDao.syncPhotosFromRecipe(menuId);
+                msg = rows > 0 ? "已按食谱更新 " + rows + " 道菜的图片" : "没有需要更新的图片";
+                break;
+            }
             case "/addItem":
                 menuDao.addItemFromRecipe(RecipeServlet.parseInt(req.getParameter("menuId"), 0),
                                           RecipeServlet.parseInt(req.getParameter("recipeId"), 0));

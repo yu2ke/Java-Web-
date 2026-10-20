@@ -18,7 +18,10 @@
 
     <div class="tiles">
       <div class="tile"><div class="num">${recipeCount}</div><div class="lbl">在售菜品</div></div>
-      <div class="tile"><div class="num">${orderCount}</div><div class="lbl">历史订单</div></div>
+      <c:if test="${not empty companyOrderCount}">
+        <div class="tile"><div class="num">${companyOrderCount}</div><div class="lbl">当日全公司订单</div></div>
+      </c:if>
+      <div class="tile"><div class="num">${orderCount}</div><div class="lbl">我的历史订单</div></div>
     </div>
 
     <div class="card">

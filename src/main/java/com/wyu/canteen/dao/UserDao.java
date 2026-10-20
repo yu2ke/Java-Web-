@@ -61,6 +61,26 @@ public class UserDao {
         return count("SELECT COUNT(*) FROM orders");
     }
 
+    /** 某个员工自己的订单数（主页数字要和「我的订单」页一致） */
+    public int countOrderByUser(int userId) {
+        String sql = "SELECT COUNT(*) FROM orders WHERE user_id = ?";
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, userId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) return rs.getInt(1);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    /** 全公司当天的订单数（经理主页用） */
+    public int countOrderToday() {
+        return count("SELECT COUNT(*) FROM orders WHERE order_date = CURDATE()");
+    }
+
     private int count(String sql) {
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql);

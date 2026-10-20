@@ -26,7 +26,9 @@ public class HomeServlet extends HttpServlet {
         }
         UserDao dao = new UserDao();
         req.setAttribute("recipeCount", dao.countRecipe());
-        req.setAttribute("orderCount", dao.countOrder());
+        req.setAttribute("orderCount", dao.countOrderByUser(user.getUserId()));
+        // 全公司「当日」订单数只给餐厅经理看
+        if (user.isManager()) req.setAttribute("companyOrderCount", dao.countOrderToday());
         req.getRequestDispatcher("/WEB-INF/views/home.jsp").forward(req, resp);
     }
 }

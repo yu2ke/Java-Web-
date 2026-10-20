@@ -187,6 +187,22 @@ public class MenuDao {
         }
     }
 
+    /** 把某份菜单里各菜品的图片按食谱刷新一遍，返回更新的行数（只动图片，不动价格/名称） */
+    public int syncPhotosFromRecipe(int menuId) {
+        String sql = "UPDATE menu_item mi JOIN recipe r ON r.recipe_id = mi.recipe_id "
+                   + "SET mi.photo = r.photo "
+                   + "WHERE mi.menu_id = ? AND r.photo IS NOT NULL "
+                   + "  AND (mi.photo IS NULL OR mi.photo <> r.photo)";
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, menuId);
+            return ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
     /** 调用存储过程切换当前菜单 */
     public void activate(int menuId) {
         try (Connection conn = DBUtil.getConnection();
